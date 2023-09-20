@@ -45,4 +45,14 @@ class OrderRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findWithItemsAndProducts()
+    {
+        return $this->createQueryBuilder('o')
+            ->addSelect('oi', 'p')
+            ->leftJoin('o.orderItems', 'oi')
+            ->leftJoin('oi.product', 'p')
+            ->getQuery()
+            ->getResult();
+    }
 }
