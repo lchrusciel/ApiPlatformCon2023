@@ -17,14 +17,20 @@ class OrderItem
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Product $product = null;
+    private Product $product;
 
-    #[ORM\Column]
-    private ?int $quantity = null;
+    #[ORM\Column(nullable: false)]
+    private int $quantity;
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Order $originOrder = null;
+
+    public function __construct(Product $product, int $quantity)
+    {
+        $this->product = $product;
+        $this->quantity = $quantity;
+    }
 
     public function getId(): ?int
     {
@@ -65,5 +71,10 @@ class OrderItem
         $this->originOrder = $originOrder;
 
         return $this;
+    }
+
+    public function getPrice(): int
+    {
+        return $this->quantity * $this->product->getPrice();
     }
 }

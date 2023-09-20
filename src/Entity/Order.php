@@ -18,12 +18,15 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'originOrder', targetEntity: OrderItem::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'originOrder', targetEntity: OrderItem::class, cascade: ['all'], orphanRemoval: true)]
     private Collection $orderItems;
 
-    public function __construct()
+    public function __construct(array $orderItems)
     {
         $this->orderItems = new ArrayCollection();
+        foreach ($orderItems as $orderItem) {
+            $this->addOrderItem($orderItem);
+        }
     }
 
     public function getId(): ?int
@@ -37,6 +40,11 @@ class Order
     public function getOrderItems(): Collection
     {
         return $this->orderItems;
+    }
+
+    public function getTotal(): int
+    {
+         return (int) $this->orderItems->reduce(fn (int $currentValue, OrderItem $item) => $currentValue + $item->getPrice(), 0);
     }
 
     public function addOrderItem(OrderItem $orderItem): static

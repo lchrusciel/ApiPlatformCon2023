@@ -15,30 +15,36 @@ class Product
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $name = null;
+    #[ORM\Column(nullable: false)]
+    private string $name;
 
-    #[ORM\Column]
-    private ?int $price = null;
+    #[ORM\Column(nullable: false)]
+    private int $price;
+
+    public function __construct(string $name, int $price)
+    {
+        $this->name = $name;
+        $this->price = $price;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?int
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(int $name): static
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): int
     {
         return $this->price;
     }
