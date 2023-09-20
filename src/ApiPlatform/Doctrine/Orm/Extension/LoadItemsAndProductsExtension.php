@@ -46,10 +46,10 @@ final class LoadItemsAndProductsExtension implements QueryCollectionExtensionInt
             return;
         }
 
-        $queryBuilder
-            ->addSelect('oi', 'p')
-            ->join(OrderItem::class, 'oi', Join::WITH, 'oi.originOrder = o')
-            ->join(Product::class, 'p', Join::WITH, 'oi.product = p')
-        ;
+//        $queryBuilder
+//            ->addSelect('oi', 'p')
+//            ->join(OrderItem::class, 'oi', Join::WITH, 'oi.originOrder = o')
+//            ->join(Product::class, 'p', Join::WITH, 'oi.product = p')
+//        ;
     }
 }
