@@ -18,7 +18,7 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'originOrder', targetEntity: OrderItem::class, cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'originOrder', targetEntity: OrderItem::class, cascade: ['all'], orphanRemoval: true, fetch: 'EAGER')]
     private Collection $orderItems;
 
     public function __construct(array $orderItems)
