@@ -3,14 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
-#[ApiResource]
+#[ApiResource(operations: [new GetCollection(
+    normalizationContext: ['groups' => ['read']],
+)])]
 class Order
 {
     #[ORM\Id]
@@ -19,6 +23,7 @@ class Order
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'originOrder', targetEntity: OrderItem::class, cascade: ['all'], orphanRemoval: true, fetch: 'EAGER')]
+    #[Groups(['read'])]
     private Collection $orderItems;
 
     public function __construct(array $orderItems)
@@ -29,6 +34,7 @@ class Order
         }
     }
 
+    #[Groups(['read'])]
     public function getId(): ?int
     {
         return $this->id;
@@ -42,6 +48,7 @@ class Order
         return $this->orderItems;
     }
 
+    #[Groups(['read'])]
     public function getTotal(): int
     {
          return (int) $this->orderItems->reduce(fn (int $currentValue, OrderItem $item) => $currentValue + $item->getPrice(), 0);

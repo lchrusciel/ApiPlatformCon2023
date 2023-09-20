@@ -19,6 +19,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\ApiPlatform\Doctrine\Orm\Extension\LoadItemsAndProductsExtension:
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection, priority: 100 }
+            - { name: api_platform.doctrine.orm.query_extension.item, priority: 100 }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

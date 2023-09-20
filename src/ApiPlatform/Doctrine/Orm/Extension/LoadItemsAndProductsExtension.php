@@ -19,6 +19,9 @@ use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Operation;
 use App\Entity\Order;
+use App\Entity\OrderItem;
+use App\Entity\Product;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 final class LoadItemsAndProductsExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
@@ -39,15 +42,14 @@ final class LoadItemsAndProductsExtension implements QueryCollectionExtensionInt
             throw new InvalidArgumentException('The "$resourceClass" parameter must not be null');
         }
 
-        if (!is_a($resourceClass, Order::class)) {
+        if ($resourceClass !== Order::class) {
             return;
         }
 
         $queryBuilder
-            ->addSelect('orderItems')
-            ->addSelect('products')
-            ->leftJoin('orderItems', 'oi')
-            ->leftJoin('product', 'p')
+            ->addSelect('oi', 'p')
+            ->join(OrderItem::class, 'oi', Join::WITH, 'oi.originOrder = o')
+            ->join(Product::class, 'p', Join::WITH, 'oi.product = p')
         ;
     }
 }
