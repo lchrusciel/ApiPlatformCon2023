@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\OrderRepository;
 use App\State\OrderCollectionProvider;
@@ -15,7 +16,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Table(name: '`order`')]
 #[ApiResource(operations: [new GetCollection(
     normalizationContext: ['groups' => ['read']],
-    provider: OrderCollectionProvider::class
+//    provider: OrderCollectionProvider::class
+), new Get(
+    normalizationContext: ['groups' => ['read']]
+
 )])]
 class Order
 {
@@ -24,7 +28,7 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'originOrder', targetEntity: OrderItem::class, cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'originOrder', targetEntity: OrderItem::class, cascade: ['all'], orphanRemoval: true, fetch: 'EAGER')]
     #[Groups(['read'])]
     private Collection $orderItems;
 

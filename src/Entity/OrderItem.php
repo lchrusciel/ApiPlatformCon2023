@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
 #[ApiResource]
@@ -17,9 +18,11 @@ class OrderItem
 
     #[ORM\ManyToOne()]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read'])]
     private Product $product;
 
     #[ORM\Column(nullable: false)]
+    #[Groups(['read'])]
     private int $quantity;
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
@@ -51,6 +54,7 @@ class OrderItem
 
     public function getQuantity(): ?int
     {
+        $this->product->getPrice();
         return $this->quantity;
     }
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource]
@@ -16,10 +17,12 @@ class Product
     private ?int $id = null;
 
     #[ORM\Column(nullable: false)]
+    #[Groups(['read'])]
     private string $name;
 
-    #[ORM\Column(nullable: false)]
-    private int $price;
+    #[ORM\Column(nullable: false, type: 'decimal', precision: 10, scale: 2)]
+    #[Groups(['read'])]
+    private float $price;
 
     public function __construct(string $name, int $price)
     {
@@ -44,12 +47,12 @@ class Product
         return $this;
     }
 
-    public function getPrice(): int
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    public function setPrice(int $price): static
+    public function setPrice(float $price): static
     {
         $this->price = $price;
 
